@@ -13,6 +13,7 @@ KOFI_TOKEN = os.getenv("KOFI_TOKEN")
 GOOGLE_SHEETS = os.getenv("GOOGLE_SHEETS")
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
+EMAIL_SUBJECT_STORE = os.getenv("EMAIL_SUBJECT_STORE")
 DEBUG_EMAIL_TO = os.getenv("DEBUG_EMAIL_TO")
 
 CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -84,7 +85,7 @@ def home():
     # Write data based in donation type
     subject = ""
     if res_type == "Donation":
-        subject = "Thanks for your support to nyxtrackers!"
+        subject = f"Thanks for your support to {EMAIL_SUBJECT_STORE}!"
         write_data (sheets_manager, "kofi donations", [
             date, 
             time, 
@@ -95,7 +96,7 @@ def home():
             currency
         ])        
     elif res_type == "Shop Order":
-        subject = "Thanks for purchasing nyxtrackers!"
+        subject = f"Thanks for purchasing {EMAIL_SUBJECT_STORE}!"
         write_data (sheets_manager, "kofi sales", [
             date, 
             time, 
