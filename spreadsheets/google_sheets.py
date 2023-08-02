@@ -19,13 +19,22 @@ class SheetsManager ():
         client = gspread.authorize(creds)
 
         # Conect to google sheet
-        sheet = client.open_by_url(google_sheet_link)
+        self.sheet = client.open_by_url(google_sheet_link)
 
         # Set the sheet 1 as worksheet
         if sheet_name:
-            self.worksheet = sheet.worksheet(sheet_name)
+            self.worksheet = self.sheet.worksheet(sheet_name)
         else:
-            self.worksheet = sheet.sheet1
+            self.worksheet = self.sheet.sheet1
+
+    def set_sheet (self, sheet_name:str):
+        """ Change current working sheet
+
+        Args:
+            sheet_name (str): sheet name
+        """
+        
+        self.worksheet = self.sheet.worksheet(sheet_name)
 
     def write_cell (self, value, row=1, column=1):
         """ Write data in specific cell 
