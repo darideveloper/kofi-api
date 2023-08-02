@@ -112,16 +112,19 @@ def home():
             ])
             
         # Submit thaks email
-        print (f"Sending confirmation email to {email}...")
-        EMAIL_MANAGER.send_email (
-            receivers=[email],
-            subject=subject,
-            html_path=os.path.join(CURRENT_FOLDER, "templates", "thanks.html"),
-            html_data={"user_name": user_name, "res_type": res_type}    
-        )
-        print ("Email sent")
-            
-        return ("ok")
+        if subject:
+            print (f"Sending confirmation email to {email}...")
+            EMAIL_MANAGER.send_email (
+                receivers=[email],
+                subject=subject,
+                html_path=os.path.join(CURRENT_FOLDER, "templates", "thanks.html"),
+                html_data={"user_name": user_name, "res_type": res_type}    
+            )
+            print ("Email sent")
+                
+            return ("ok")
+    
+        return ("no valid type", 400)
 
     except Exception as e:
         
