@@ -1,2 +1,4 @@
 Flask==2.3.2
 python-dotenv==1.0.0
+gspread==4.0.1
+oauth2client==4.1.3
