@@ -4,14 +4,20 @@ from datetime import datetime as dt
 from flask import Flask, request
 from dotenv import load_dotenv
 from spreadsheets.google_sheets import SheetsManager
+from email_manager.sender import EmailManager
 
 load_dotenv ()
 
 app = Flask(__name__)
 KOFI_TOKEN = os.getenv("KOFI_TOKEN")
 GOOGLE_SHEETS = os.getenv("GOOGLE_SHEETS")
+EMAIL_USER = os.getenv("EMAIL_USER")
+EMAIL_PASS = os.getenv("EMAIL_PASS")
+DEBUG_EMAIL_TO = os.getenv("DEBUG_EMAIL_TO")
 
-def write_data (seheets_manager:SheetsManager, sheet:str, data:list):
+CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
+
+def write_data (sheets_manager:SheetsManager, sheet:str, data:list):
     """ Write data in specific sheet
 
     Args:
@@ -20,13 +26,13 @@ def write_data (seheets_manager:SheetsManager, sheet:str, data:list):
     """
     
     # Change sheet
-    seheets_manager.set_sheet (sheet)
+    sheets_manager.set_sheet (sheet)
 
     # Detect last row
-    current_row = seheets_manager.get_rows_num () + 1
+    current_row = sheets_manager.get_rows_num () + 1
 
     # Write data
-    seheets_manager.write_data ([data], row=current_row, column=1)
+    sheets_manager.write_data ([data], row=current_row, column=1)
 
 @app.post("/")
 def home():
@@ -73,11 +79,13 @@ def home():
     # Connect to google sheets
     current_folder = os.path.dirname(os.path.abspath(__file__))
     creads_path = os.path.join (current_folder, "credentials.json")
-    sheets = SheetsManager (GOOGLE_SHEETS, creads_path)
+    sheets_manager = SheetsManager (GOOGLE_SHEETS, creads_path)
    
     # Write data based in donation type
+    subject = ""
     if res_type == "Donation":
-        write_data (sheets, "kofi donations", [
+        subject = "Thanks for your support to nyxtrackers!"
+        write_data (sheets_manager, "kofi donations", [
             date, 
             time, 
             user_name, 
@@ -87,7 +95,8 @@ def home():
             currency
         ])        
     elif res_type == "Shop Order":
-        write_data (sheets, "kofi sales", [
+        subject = "Thanks for purchasing nyxtrackers!"
+        write_data (sheets_manager, "kofi sales", [
             date, 
             time, 
             user_name, 
@@ -97,6 +106,17 @@ def home():
             shop_items_text, 
             shipping_text
         ])
+        
+    # Submit thaks email
+    print (f"Sending confirmation email to {email}...")
+    email_manager = EmailManager (EMAIL_USER, EMAIL_PASS)
+    email_manager.send_email (
+        receivers=[email],
+        subject=subject,
+        html_path=os.path.join(CURRENT_FOLDER, "templates", "thanks.html"),
+        html_data={"user_name": user_name, "res_type": res_type}    
+    )
+    print ("Email sent!")
          
     return ("ok")
 
