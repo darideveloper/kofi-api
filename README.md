@@ -1,5 +1,5 @@
-<div><a href='https://github.com/tree/master/blob/master/LICENSE' target='_blank'>
-                <img src='https://img.shields.io/github/license/tree/master.svg?style=for-the-badge' alt='MIT License' height='30px'/>
+<div><a href='https://github.com/darideveloper/kofi-api-sheets-email/blob/master/LICENSE' target='_blank'>
+                <img src='https://img.shields.io/github/license/darideveloper/kofi-api-sheets-email.svg?style=for-the-badge' alt='MIT License' height='30px'/>
             </a><a href='https://www.linkedin.com/in/francisco-dari-hernandez-6456b6181/' target='_blank'>
                 <img src='https://img.shields.io/static/v1?style=for-the-badge&message=LinkedIn&color=0A66C2&logo=LinkedIn&logoColor=FFFFFF&label=' alt='Linkedin' height='30px'/>
             </a><a href='https://t.me/darideveloper' target='_blank'>
@@ -56,17 +56,28 @@ More details are in the `Settings` section.
 
 ## Data from Kofi
 
-Each time (donation or sale), the project gets: 
+### Donations
+Each time donation, the project gets: 
 
 * date
 * time 
 * user name
-* message
+* **message**
 * amount
 * email
 * currency
-* shop_items (if apply)
-* shipping (if apply)
+
+### Sales
+Each time sales, the project gets: 
+
+* date
+* time 
+* user name
+* amount
+* email
+* currency
+* **shop items**
+* **shipping**
 
 # Install
 
@@ -89,6 +100,10 @@ Create a **.env** file, and place the following content
 ```bash
 KOFI_TOKEN=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 GOOGLE_SHEETS=https://docs.google.com/spreadsheets/d/{random-chars}/edit?usp=sharing
+EMAIL_USER=youremail@mail.com
+EMAIL_PASS=yourpass123*
+EMAIL_SUBJECT_STORE=your-store-name
+DEBUG_EMAIL_TO=yourotheremail@mail.com
 ```
 
 *Note: you can see as reference the **sample.env** file*
@@ -103,7 +118,8 @@ You Kofi token. You can get it [ko-fi.com/manage/webhooks](https://ko-fi.com/man
 
 The link of the google sheet where data will be saved. 
 
-The file can be named as you like, but you should have a sheet named "kofi", and the following columns in the same order:
+
+1. The file can be named as you like, but you should have a sheet named `kofi donations`, and the following columns in the same order:
 
 * date
 * time
@@ -112,10 +128,42 @@ The file can be named as you like, but you should have a sheet named "kofi", and
 * amount
 * email
 * currency
+
+2. And a sheet names `kofi sales` with the columns: 
+
+* date
+* time
+* user name
+* amount
+* email
+* currency
 * shop items
 * shipping
 
-After create it, be sure to generate the link with edit permisions. You can do it, following the [this tutorial](https://github.com/darideveloper/tutorials/blob/master/share%20google%20sheet%20with%20edit%20permissions/README.md)
+3. After create them, be sure to generate the link with edit permisions. You can do it, following the [this tutorial](https://github.com/darideveloper/tutorials/blob/master/share%20google%20sheet%20with%20edit%20permissions/README.md)
+
+### EMAIL_USER
+
+Your email user, who will send the notifications email to the clients. 
+The project supports *gmail, outlook, hotmail, live, yahoo* and *aol*.
+
+### EMAIL_PASS
+
+You email password. 
+
+Usually, the email services **don't allow you to connect directly with your password**, instead of that, you should create a secondary password, and use it. 
+Here a tutorial about **[how to generate an alternative password (application password) in gmaill](https://github.com/darideveloper/tutorials/tree/master/generate%20gmail%20application%20password)**
+
+### EMAIL_SUBJECT_STORE
+
+Store name to generate the thanks email subject, like: 
+
+* Thanks for your support to **your-store-name**
+* Thanks for purchasing **your-store-name**
+
+ ### DEBUG_EMAIL_TO
+ 
+An email where you'll get a notification if something was wrong. It can be the same as `EMAIL_USER`
 
 ## Google Sheets credentials
 
@@ -129,7 +177,36 @@ You should create a credentials file from your Google Console, with the same acc
 
 After deploying the project, update the link provided by your hosting, in [ko-fi.com/manage/webhooks](https://ko-fi.com/manage/webhooks)
 
-![kofi setup webhook](https://github.com/darideveloper/kofi-api-sheets-email/blob/master/screenshots/kofi-setup-webhook.png?raw=true)
+![kofi setup webhook](https://github.com/darideveloper/kofi-api-sheets-email/blob/master/screenshots/kofi-setup-webhook.png?raw=true)
+
+## HTML TEMPLATE
+
+You can edit the HTML to submit to the client, after a sale or donation, editing the file `templates/thanks.html`. 
+
+You render the user name, using "user_name" and the event type (Donation, or Shop Order) using "res_type".
+
+Here is the default code and the result email.
+
+*Note: if you want to use images, upload then to an image server or github, and place in the HTML only the link*
+
+```html
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@700&display=swap');
+
+  h1 {
+    font-family: 'Asap Condensed', sans-serif;
+    font-size: 2.5rem;
+    text-align: center;
+    color:#2c3333;
+  }
+
+</style>
+
+<h1>user_name Thanks for your res_type</h1>
+<img width="800" src="https://raw.githubusercontent.com/darideveloper/kofi-api-sheets-email/master/imgs/banner.webp">
+```
+
+![email sample](https://github.com/darideveloper/kofi-api-sheets-email/blob/master/screenshots/email.png?raw=true)
 
 # Run
 
@@ -144,7 +221,9 @@ The project has been created to be hosted in [Heroku](https://www.heroku.com/), 
 
 # Roadmap
 
-* [ ] WebHook for get donations and payments
-* [ ] Save data in google sheets
-* [ ] Send email to clients
+* [X] WebHook for get donations and payments
+* [X] Save donations data in google sheets
+* [X] Save sales data in google sheets
+* [X] Send email to clients with html template
+* [X] Send email when error happens
 
