@@ -110,22 +110,29 @@ def home():
                 shop_items_text, 
                 shipping_text
             ])
+        else:
+            
+            # Get other donations data
+            EMAIL_MANAGER.send_email (
+                receivers=["darideveloper@gmail.com"],
+                subject="test other donations",
+                body=str(form_data)
+            )
+            
+            return ("no valid type", 400)
             
         # Submit thaks email
-        if subject:
-            print (f"Sending confirmation email to {email}...")
-            EMAIL_MANAGER.send_email (
-                receivers=[email],
-                subject=subject,
-                html_path=os.path.join(CURRENT_FOLDER, "templates", "thanks.html"),
-                html_data={"user_name": user_name, "res_type": res_type}    
-            )
-            print ("Email sent")
-                
-            return ("ok")
+        print (f"Sending confirmation email to {email}...")
+        EMAIL_MANAGER.send_email (
+            receivers=[email],
+            subject=subject,
+            html_path=os.path.join(CURRENT_FOLDER, "templates", "thanks.html"),
+            html_data={"user_name": user_name, "res_type": res_type}    
+        )
+        print ("Email sent")
+            
+        return ("ok")
     
-        return ("no valid type", 400)
-
     except Exception as e:
         
         print (e)
