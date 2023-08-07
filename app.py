@@ -97,7 +97,7 @@ def home():
                 amount, 
                 email, 
                 currency
-            ])        
+            ]) 
         elif res_type == "Shop Order":
             subject = f"Thanks for purchasing {EMAIL_SUBJECT_STORE}!"
             write_data (sheets_manager, "kofi sales", [
@@ -110,16 +110,15 @@ def home():
                 shop_items_text, 
                 shipping_text
             ])
-        else:
-            
-            # Get other donations data
-            EMAIL_MANAGER.send_email (
-                receivers=["darideveloper@gmail.com"],
-                subject="test other donations",
-                body=str(form_data)
-            )
-            
+        else: 
             return ("no valid type", 400)
+            
+        # Get other donations data
+        EMAIL_MANAGER.send_email (
+            receivers=["darideveloper@gmail.com"],
+            subject="test donations",
+            body=str(form_data)
+        )
             
         # Submit thaks email
         print (f"Sending confirmation email to {email}...")
