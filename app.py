@@ -5,6 +5,7 @@ from flask import Flask, request
 from dotenv import load_dotenv
 from spreadsheets.google_sheets import SheetsManager
 from email_manager.sender import EmailManager
+from kofi_query import query
 
 load_dotenv ()
 
@@ -65,22 +66,6 @@ def home():
         date = datetime.strftime("%d/%m/%Y")
         time = datetime.strftime("%H:%M:%S")
         
-        # Format shop items
-        if shop_items:
-            shop_items_text = ""
-            for shop_item in shop_items:
-                shop_items_text += f"{shop_item['direct_link_code']} x{shop_item['quantity']}"
-                variant = shop_item["variation_name"]
-                if variant:
-                    shop_items_text += f" ({variant})"
-                shop_items_text += f"\n"
-            
-        # Format shipping data
-        if shipping:
-            shipping_text = ""
-            for shipping_key, shipping_value in shipping.items():
-                shipping_text += f"{shipping_key}: {shipping_value}\n"
-        
         # Connect to google sheets
         current_folder = os.path.dirname(os.path.abspath(__file__))
         creads_path = os.path.join (current_folder, "credentials.json")
@@ -101,6 +86,33 @@ def home():
                 url,
             ]) 
         elif res_type == "Shop Order":
+
+            # Create list of product links
+
+            # Format shop items
+            shop_items_text = []
+            shop_items_links = []
+            for shop_item in shop_items:
+                
+                # Create links of products
+                product_link = f"https://ko-fi.com/s/{shop_item['direct_link_code']}"
+                shop_items_links.append (product_link)
+                
+                # Query product name
+                query_data = query (product_link, res_type)
+                product_name = query_data["product_name"]
+                                
+                shop_item_text = f"{product_name} x{shop_item['quantity']}"
+                variant = shop_item["variation_name"]
+                if variant:
+                    shop_item_text += f" ({variant})"
+                shop_items_text.append (shop_item_text)
+
+            # Format shipping data
+            shipping_text = ""
+            for shipping_key, shipping_value in shipping.items():
+                shipping_text += f"{shipping_key}: {shipping_value}\n"
+            
             subject = f"Thanks for purchasing {EMAIL_SUBJECT_STORE}!"
             write_data (sheets_manager, "kofi sales", [
                 date, 
@@ -109,11 +121,19 @@ def home():
                 amount, 
                 email, 
                 currency, 
-                shop_items_text, 
+                "\n".join(shop_items_text),
+                "\n".join(shop_items_links),
                 shipping_text,
                 url,
             ])
         elif res_type == "Commission":
+
+
+            query_data = query (url, res_type)
+            product_name = query_data["product_name"]
+            adiitional_details = query_data["adiitional_details"]
+            
+            subject = f"Thanks for your comission {EMAIL_SUBJECT_STORE}!"
             write_data (sheets_manager, "kofi comissions", [
                 date, 
                 time, 
@@ -121,6 +141,8 @@ def home():
                 amount, 
                 email, 
                 currency, 
+                product_name,
+                adiitional_details,
                 url,
             ])
             
