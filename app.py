@@ -149,7 +149,7 @@ def home():
         # Get other donations data
         EMAIL_MANAGER.send_email (
             receivers=["darideveloper@gmail.com"],
-            subject="test donations",
+            subject=f"test donations {res_type}",
             body=str(form_data)
         )
             
