@@ -110,6 +110,7 @@ def home():
 
             # Format shipping data
             shipping_text = ""
+            shipping_name = shipping["full_name"]
             for shipping_key, shipping_value in shipping.items():
                 shipping_text += f"{shipping_key}: {shipping_value}\n"
             
@@ -123,6 +124,7 @@ def home():
                 currency, 
                 "\n".join(shop_items_text),
                 "\n".join(shop_items_links),
+                shipping_name,
                 shipping_text,
                 url,
             ])
