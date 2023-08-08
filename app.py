@@ -54,6 +54,7 @@ def home():
         currency = form_data["currency"]
         shop_items = form_data["shop_items"]
         shipping = form_data["shipping"]
+        url = form_data["url"]
         
         # Validate token
         if res_token != KOFI_TOKEN:
@@ -96,7 +97,8 @@ def home():
                 message, 
                 amount, 
                 email, 
-                currency
+                currency,
+                url,
             ]) 
         elif res_type == "Shop Order":
             subject = f"Thanks for purchasing {EMAIL_SUBJECT_STORE}!"
@@ -108,9 +110,20 @@ def home():
                 email, 
                 currency, 
                 shop_items_text, 
-                shipping_text
+                shipping_text,
+                url,
             ])
-
+        elif res_type == "Commission":
+            write_data (sheets_manager, "kofi comissions", [
+                date, 
+                time, 
+                user_name, 
+                amount, 
+                email, 
+                currency, 
+                url,
+            ])
+            
         # Get other donations data
         EMAIL_MANAGER.send_email (
             receivers=["darideveloper@gmail.com"],
