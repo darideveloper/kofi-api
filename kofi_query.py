@@ -10,7 +10,7 @@ def query (url:str, query_type:str) -> dict:
 
     Returns:
         dict: data of the query:
-            Commission: {product_name, adiitional_details}
+            Commission: {product_name, adiitional_details, country}
             Shop Order: {product_name}
     """
 
@@ -20,7 +20,9 @@ def query (url:str, query_type:str) -> dict:
     selectos = {
         "commission": {
             "product_name": ".modal-dialog.modal-lg .row span:nth-child(3).kfds-font-size-16",
-            "adiitional_details": ".modal-dialog.modal-lg .row .kfds-font-size-16.line-breaks.break-long-words"
+            "adiitional_details": ".modal-dialog.modal-lg .row .kfds-font-size-16.line-breaks.break-long-words",
+            "country": '#supporterAddress',
+            "full_address": '#supporterAddress',
         },
         "shop order": {
             "product_name": ".shop-item-title",
@@ -39,6 +41,10 @@ def query (url:str, query_type:str) -> dict:
                 text = soup.select(selector_value)[0].text.strip().replace("\r", "")
             except:
                 text = "not found"
+                
+            # Extra clean and format
+            if selector_name == "country":
+                text = text.split (",")[-1].strip()
             
             page_data[selector_name] = text
 

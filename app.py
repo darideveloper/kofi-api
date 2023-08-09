@@ -134,6 +134,8 @@ def home():
             query_data = query (url, res_type)
             product_name = query_data["product_name"]
             adiitional_details = query_data["adiitional_details"]
+            country = query_data["country"]
+            full_address = query_data["full_address"]
             
             subject = f"Thanks for your comission {EMAIL_SUBJECT_STORE}!"
             write_data (sheets_manager, "kofi comissions", [
@@ -144,6 +146,8 @@ def home():
                 email, 
                 currency, 
                 product_name,
+                country, 
+                full_address,
                 adiitional_details,
                 url,
             ])
