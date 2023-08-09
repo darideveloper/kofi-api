@@ -2,5 +2,6 @@ Flask==2.3.2
 python-dotenv==1.0.0
 gspread==4.0.1
 oauth2client==4.1.3
+gunicorn==21.2.0
 requests==2.31.0
 beautifulsoup4==4.12.2
