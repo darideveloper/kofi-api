@@ -138,7 +138,7 @@ def home():
             full_address = query_data["full_address"]
             
             subject = f"Thanks for your comission {EMAIL_SUBJECT_STORE}!"
-            write_data (sheets_manager, "kofi comissions", [
+            write_data (sheets_manager, "kofi commissions", [
                 date, 
                 time, 
                 user_name, 
