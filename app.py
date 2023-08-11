@@ -84,6 +84,7 @@ def home():
                 email, 
                 currency,
                 url,
+                "FALSE",
             ]) 
         elif res_type == "Shop Order":
 
@@ -127,6 +128,7 @@ def home():
                 shipping_name,
                 shipping_text,
                 url,
+                "FALSE",
             ])
         elif res_type == "Commission":
 
@@ -150,6 +152,7 @@ def home():
                 full_address,
                 adiitional_details,
                 url,
+                "FALSE",
             ])
             
         # Get other donations data
