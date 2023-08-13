@@ -112,6 +112,7 @@ def home():
             # Format shipping data
             shipping_text = ""
             shipping_name = shipping["full_name"]
+            country = query_data["country"]
             for shipping_key, shipping_value in shipping.items():
                 shipping_text += f"{shipping_key}: {shipping_value}\n"
             
@@ -126,6 +127,7 @@ def home():
                 "\n".join(shop_items_text),
                 "\n".join(shop_items_links),
                 shipping_name,
+                country,
                 shipping_text,
                 url,
                 "FALSE",

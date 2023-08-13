@@ -26,6 +26,7 @@ def query (url:str, query_type:str) -> dict:
         },
         "shop order": {
             "product_name": ".shop-item-title",
+            "country": "#supporterAddress",
         }    
     }
 
